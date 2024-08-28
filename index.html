@@ -152,11 +152,12 @@
                   </div>
                   
                   <div  class="row mb-3">
-                    <label class="col-sm-4 col-form-label text-end" >Thời gian tìm kết quả:</label>
-                    <div class="col-sm-3">
+                   <!--<label class="col-sm-4 col-form-label d-none text-end" >Thời gian tìm kết quả:</label>
+                    <div class="col-sm-3 d-none">
                         <input id="input-timeout"  class="form-control" type="text" >
                     </div>
-                    <label class="col-sm-2 col-form-label text-end" >Tốc độ:</label>
+                    --> 
+                    <label class="col-sm-2 col-form-label" >Tốc độ:</label>
                     <div class="col-sm-3">
                         <input id="input-speed"  class="form-control" type="text" >
                     </div>
@@ -251,7 +252,7 @@
         $('#price5').val(0);
         $('#range5').val(0);
         $('#total').val(formatNumber(8910000));
-        $('#input-timeout').val(formatNumber(3000));
+      //  $('#input-timeout').val(formatNumber(3000));
         $('#input-speed').val(30);
     $('#btnResult').click(function(){
         
@@ -280,7 +281,7 @@
         let price5 =parseNumber($('#price5').val(),10);
         let range5 =parseNumber($('#range5').val(),10);
         let total =parseNumber($('#total').val(),10);
-        let timeout =parseNumber($('#input-timeout').val(),10);
+        let timeout =3000;//parseNumber($('#input-timeout').val(),10);
         let step =parseNumber($('#input-speed').val(),10);
         let totalRange = [];
         let found=false;
