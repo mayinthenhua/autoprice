@@ -149,11 +149,10 @@
                   <div  class="row mb-3">
                     <label class="col-sm-8 col-form-label text-end" >Giá trị hóa đơn mong muốn</label>
                     <div class="col-sm-4">
-                        <input id="total"  class="form-control text-end" type="text" >
+                        <input id="total"  class="form-control text-end" type="text" style="border-color: red;" >
                     </div>
                   </div>
-                  <div  class="row">
-                    <label class="col-form-label text-end" id="total-range" ></label>
+                  <div id="total-range" class=" d-flex  justify-content-end">
                     
                   </div>
                   
@@ -266,7 +265,7 @@
         $('#range5').val(0);
         $('#total').val(formatNumber(8910000));
       //  $('#input-timeout').val(formatNumber(3000));
-        $('#input-speed').val(30);
+        $('#input-speed').val(2);
     $('#btnResult').click(function(){
         
         let quanlity1 = parseNumber( $('#quanlity1').val(),10); 
@@ -299,6 +298,7 @@
         let totalRange = [];
         let found=false;
         $('#list-result').empty();
+        let hasResultValue = false;
         const startTime = Date.now();
         for (let x = price1 - range1; x <= price1 + range1; x += step) {
             let sub1 = quanlity1 * x;
@@ -334,7 +334,7 @@
                                         -HH4: <strong>${formatNumber(u)}</strong> 
                                         -HH5: <strong>${formatNumber(v)}</strong>
                                     </li>`);
-                                
+                                    hasResultValue = true;
                             }
                             if (Date.now() - startTime >= timeout) {
                                 console.log('time out');
@@ -351,7 +351,21 @@
          
         let max = Math.max(...totalRange);
         let min = Math.min(...totalRange);
-        $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong>`);
+        if(!hasResultValue){
+            $('#list-result').append(
+                `<li class="list-group-item">
+                    <strong style="color: red;">Không tìm thấy kết quả hợp lệ.</strong> 
+                    <br>
+                    Vui lòng giảm tốc độ hoặc thay đổi giá trị khác cho phù hợp. 
+                </li>`);
+        }
+        if(total<min)
+            $('#total-range').html(`Giá trị tìm được khoảng:<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong>`);
+        else if(total > max)
+            $('#total-range').html(`Giá trị tìm được khoảng: <strong'> ${formatNumber(min)} ... ${formatNumber(max)}</strong>...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>`);
+        else{
+            $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... ${formatNumber(max)}</strong> `);
+        }
     });
 
         
