@@ -1,31 +1,74 @@
+self.onmessage = function(event) {
+    const { start, end, total,step,hh } = event.data;
+    let results = [];
+    //let step = 1;
+   // let total=8910000;
+    // for (let i = start; i < end; i++) {
+    //     for (let j = 0; j < largeNumber; j++) {
+    //         results.push(performHeavyTask(i, j));
+    //     }
+    // }
+    for (let x = start; x <= end && !isTimeout; x += step) {
 
-function displayInvalidMessage(isdisplay){
+        let sub1 = hh[0].quanlity * x;
+        let taxVal1 = sub1 * hh[0].taxRate / 100;
+        if (sub1  + taxVal1 > total) {
+            break;
+        }
+        for (let y = hh[1].price - hh[1].range; y <= hh[1].price + hh[1].range && !isTimeout; y += step) {
+            let sub2 = hh[1].quanlity * y;
+            let taxVal2 = sub2 * hh[1].taxRate / 100;
+            if (sub1 + sub2  + taxVal1 + taxVal2 > total) {
+                break;
+            }
+
+            for (let z = hh[2].price - hh[2].range; z <= hh[2].price + hh[2].range && !isTimeout; z += step) {
+                let sub3 = hh[2].quanlity * z;
+                let taxVal3 = sub3 * hh[2].taxRate / 100;
+
+                if (sub1 + sub2 + sub3 + taxVal1 + taxVal2 + taxVal3 > total) {
+                    break;
+                }
+
+                for (let u = hh[3].price - hh[3].range; u <= hh[3].price + hh[3].range && !isTimeout; u += step) {
+                    let sub4 = hh[3].quanlity * u;
+                    let taxVal4 = sub4 * hh[3].taxRate / 100;
+                    if (sub1 + sub2 + sub3 + sub4 + taxVal1 + taxVal2 + taxVal3 + taxVal4 > total) {
+                        break;
+                    }
+
+                    for (let v = hh[4].price - hh[4].range; v <=hh[4].price - hh[4].range && !isTimeout; v += step) {
+                        
+                        let sub5 = hh[4].quanlity * v;
+                        let taxVal5 = sub5 * hh[4].taxRate / 100;
+
+                        let sub = sub1 + sub2 + sub3 + sub4 + sub5;
+                        let taxVal = taxVal1 + taxVal2 + taxVal3 + taxVal4 + taxVal5;
+                        taxVal = Math.round(taxVal);
+                        let calculatedTotal = sub + taxVal;
+                        if(calculatedTotal>total){
+                            break;
+                        }
+                        
+                        if (calculatedTotal === total) {
+                            results.push({x,y,z,u,v});
+                        }
+                        // if (Date.now() - startTime >= timeout) {
+                        //     console.log('time out');
+                        //     timeoutMsg(calculatedTotal);
+                        //     isTimeout = true;
+                        //     break;
+                        // }
+                        //if(isTimeout) break;
+                    }
+                }
+                
+            }
+          //  if (isTimeout) break;
+        }
+       // if (isTimeout) break;
+    }
     
-    if(isdisplay){
-
-        $('#invalid-value').removeClass('d-none');
-    }else{
-        $('#invalid-value').addClass('d-none');
-    }
-}
-function setRangeValueMessage(min,max,value){
-    if(value<min){
-        $('#invalid-message').html(`Vui lòng giảm số lượng hoặc đơn giá. <br> Cần giảm khoảng ${formatNumber(min-value)}`);
-        $('#total-range').html(`Giá trị tìm được khoảng: <i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong> <br> Lớn hơn giá trị mong muốn.`);
-    }
-    else if(value > max){
-        $('#invalid-message').html(`Vui lòng tăng số lượng hoặc đơn giá. <br>Cần tăng khoảng ${formatNumber(value-max)}`);
-        $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong>...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>  <br> Nhỏ hơn giá trị mong muốn.`);
-
-    }
-    else{
-        $('#invalid-message').html('Vui lòng giảm tốc độ hoặc thay đổi giá trị khác cho phù hợp.');
-        $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... ${formatNumber(max)}</strong> `);
-    }
-}
-function timeoutMsg(calculatedTotalCurrent){
-    $('#invalid-message').html(`Thời gian tính quá lâu. Kết quả chỉ được tính tới:${formatNumber(calculatedTotalCurrent)} <br> Thử tăng tốc độ lên`);
-}
-function totalInvalidMsg(){
-    $('#invalid-message').html(`Chưa cài đặt giá trị hóa đơn mong muốn.`);
-}
+    // Trả kết quả về luồng chính
+    self.postMessage(results);
+};
