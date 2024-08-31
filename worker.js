@@ -1,6 +1,7 @@
 self.onmessage = function(event) {
     const { start, end, total,step,hh } = event.data;
     let results = [];
+    let isTimeout = false;
     //let step = 1;
    // let total=8910000;
     // for (let i = start; i < end; i++) {
