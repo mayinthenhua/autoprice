@@ -211,18 +211,16 @@
                   </div>
                   <hr>
                   <div class="mt-3" >
-                    <div id="invalid-value" class=" d-none">
-                        <strong style="color: red;">Không tìm thấy kết quả hợp lệ.</strong> 
-                        <br>
-                        <span id="invalid-message"></span>
-                        
+                    <div id="invalid-value" class=" d-none"> 
                     </div>
                     <ul id="list-result" class="list-group scrollable-list" >
                         
                     </ul>
-                    
+                   
                   </div>
                   <hr>
+                  <div id="current-value" class=" d-none" style="color: gray;"> 
+                </div>
             </div>
         </div>
     </div>
@@ -274,7 +272,7 @@
 <script>
     $(document).ready(function(){
         
-        $('#quanlity1').val(1);
+        $('#quanlity1').val(5);
         $('#taxRate1').val(8);
         $('#price1').val( formatNumber(1550000) );
         $('#range1').val(formatNumber(10000));
@@ -300,35 +298,43 @@
         $('#range5').val(0);
         $('#total').val(formatNumber(0));
       //  $('#input-timeout').val(formatNumber(3000));
-        $('#input-speed').val(20);
+        $('#input-speed').val(30);
     $('#btnResult').click(function(){
+        let hh =[];
+        hh.push({
+            quanlity: parseNumber( $('#quanlity1').val(),10),
+            taxRate:parseNumber($('#taxRate1').val(),10),
+            price:parseNumber($('#price1').val(),10),
+            range:parseNumber($('#range1').val(),10)
+        });
+        hh.push({
+            quanlity:parseNumber($('#quanlity2').val(),10),
+            taxRate:parseNumber($('#taxRate2').val(),10),
+            price:parseNumber($('#price2').val(),10),
+            range:parseNumber($('#range2').val(),10)   
+        });
+
+        hh.push({
+            quanlity:parseNumber( $('#quanlity3').val(),10),
+            price:parseNumber($('#price3').val(),10),
+            range:parseNumber($('#range3').val(),10),
+            taxRate:parseNumber($('#taxRate3').val(),10)   
+        });
+        hh.push({
+            quanlity:parseNumber( $('#quanlity4').val(),10),
+            price:parseNumber($('#price4').val(),10),
+            range:parseNumber($('#range4').val(),10),
+            taxRate:parseNumber($('#taxRate4').val(),10)   
+        });
+        hh.push({
+            quanlity:parseNumber( $('#quanlity5').val(),10),
+            price:parseNumber($('#price5').val(),10),
+            range:parseNumber($('#range5').val(),10),
+            taxRate:parseNumber($('#taxRate5').val(),10)   
+        });
         
-        let quanlity1 = parseNumber( $('#quanlity1').val(),10); 
-        let taxRate1 =parseNumber($('#taxRate1').val(),10);
-        let price1 =parseNumber($('#price1').val(),10);
-        let range1 =parseNumber($('#range1').val(),10);
-
-        let quanlity2 =  parseNumber($('#quanlity2').val(),10);
-        let taxRate2 =parseNumber($('#taxRate2').val(),10);
-        let price2 =parseNumber($('#price2').val(),10);
-        let range2 =parseNumber($('#range2').val(),10);
-
-        let quanlity3 = parseNumber( $('#quanlity3').val(),10);
-        let taxRate3 =parseNumber($('#taxRate3').val(),10);
-        let price3 =parseNumber($('#price3').val(),10);
-        let range3 =parseNumber($('#range3').val(),10);
-
-        let quanlity4 = parseNumber( $('#quanlity4').val(),10);
-        let taxRate4 =parseNumber($('#taxRate4').val(),10);
-        let price4 =parseNumber($('#price4').val(),10);
-        let range4 =parseNumber($('#range4').val(),10);
-
-        let quanlity5 = parseNumber( $('#quanlity5').val(),10);
-        let taxRate5 =parseNumber($('#taxRate5').val(),10);
-        let price5 =parseNumber($('#price5').val(),10);
-        let range5 =parseNumber($('#range5').val(),10);
         let total =parseNumber($('#total').val(),10);
-        let timeout =6000;//parseNumber($('#input-timeout').val(),10);
+        let timeout =10000;//parseNumber($('#input-timeout').val(),10);
         let step =parseNumber($('#input-speed').val(),10);
         let resultRange = [];
         let isTimeout=false;
@@ -342,126 +348,102 @@
         const startTime = Date.now();
         try {
             //region min---max value
-            let min_sub1 = quanlity1 * (price1 - range1);
-            let min_taxVal1 = min_sub1 * taxRate1 / 100;
-            let min_sub2 = quanlity2 * (price2 - range2);
-            let min_taxVal2 = min_sub2* taxRate2 / 100;
-            let min_sub3 = quanlity3 * (price3 - range3);
-            let min_taxVal3 = min_sub3 * taxRate3 / 100;
-            let min_sub4 = quanlity4 * (price4 - range4);
-            let min_taxVal4 = min_sub4 * taxRate4 / 100;
-            let min_sub5 = quanlity5 * (price5 - range5);
-            let min_taxVal5 = min_sub5 * taxRate5 / 100;
-            let min_taxVal = min_taxVal1 + min_taxVal2 + min_taxVal3 + min_taxVal4 + min_taxVal5;
+            let min_taxVal=0;
+            let min_sub =0;
+            let max_taxVal = 0;
+            let max_sub = 0;
+            let max_sub_1_4=0;
+            let max_taxVal_1_4=0;
+            for(let i=0; i<5;i++){
+                let min_sub_i = hh[i].quanlity * (hh[i].price - hh[i].range);
+                let min_taxVal_i = min_sub_i * hh[i].taxRate / 100;
+                min_taxVal += min_taxVal_i;
+                min_sub +=min_sub_i;
+                //====
+                let max_sub_i = hh[i].quanlity * (hh[i].price + hh[i].range);
+                let max_taxVal_i = max_sub_i * hh[i].taxRate / 100;
+                max_taxVal += max_taxVal_i;
+                max_sub+=max_sub_i;
+                if(i>0){
+                    max_sub_1_4+=max_sub_i;
+                    max_taxVal_1_4+=max_taxVal_i;
+                }
+            }
+           
+            let startValue = (total - max_sub_1_4 - max_taxVal_1_4)*100/(100+hh[0].taxRate)/hh[0].quanlity;
+            startValue = Math.floor(startValue);
+            console.log("startValue",startValue);
             min_taxVal = Math.round(min_taxVal);
-            let min_sub = min_sub1 + min_sub2 + min_sub3 + min_sub4 + min_sub5;
             let min_val = min_sub + min_taxVal;
 
-            let max_sub1 = quanlity1 * (price1 + range1);
-            let max_taxVal1 = max_sub1 * taxRate1 / 100;
-            let max_sub2 = quanlity2 * (price2 + range2);
-            let max_taxVal2 = max_sub2* taxRate2 / 100;
-            let max_sub3 = quanlity3 * (price3 + range3);
-            let max_taxVal3 = max_sub3 * taxRate3 / 100;
-            let max_sub4 = quanlity4 * (price4 + range4);
-            let max_taxVal4 = max_sub4 * taxRate4 / 100;
-            let max_sub5 = quanlity5 * (price5 + range5);
-            let max_taxVal5 = max_sub5 * taxRate5 / 100;
-            let max_taxVal = max_taxVal1 + max_taxVal2 + max_taxVal3 + max_taxVal4 + max_taxVal5;
             max_taxVal = Math.round(max_taxVal);
-            let max_sub = max_sub1 + max_sub2 + max_sub3 + max_sub4 + max_sub5;
             let max_val = max_sub + max_taxVal;
+            //=================
             displayInvalidMessage(false);
         //end region
-            let current_sub1 = quanlity1 * price1;
-            let current_taxVal1 = current_sub1 * taxRate1 / 100;
-            let current_sub2 = quanlity2 * price2;
-            let current_taxVal2 = current_sub2* taxRate2 / 100;
-            let current_sub3 = quanlity3 * price3;
-            let current_taxVal3 = current_sub3 * taxRate3 / 100;
-            let current_sub4 = quanlity4 * price4;
-            let current_taxVal4 = current_sub4 * taxRate4 / 100;
-            let current_sub5 = quanlity5 * price5;
-            let current_taxVal5 = current_sub5 * taxRate5 / 100;
-            let current_taxVal = current_taxVal1 + current_taxVal2 + current_taxVal3 + current_taxVal4 + current_taxVal5;
-            current_taxVal = Math.round(current_taxVal);
-            let current_sub = current_sub1 + current_sub2 + current_sub3 + current_sub4 + current_sub5;
-            let current_val = current_sub + current_taxVal;
+            // let current_sub1 = quanlity1 * price1;
+            // let current_taxVal1 = current_sub1 * taxRate1 / 100;
+            // let current_sub2 = quanlity2 * price2;
+            // let current_taxVal2 = current_sub2* taxRate2 / 100;
+            // let current_sub3 = quanlity3 * price3;
+            // let current_taxVal3 = current_sub3 * taxRate3 / 100;
+            // let current_sub4 = quanlity4 * price4;
+            // let current_taxVal4 = current_sub4 * taxRate4 / 100;
+            // let current_sub5 = quanlity5 * price5;
+            // let current_taxVal5 = current_sub5 * taxRate5 / 100;
+            // let current_taxVal = current_taxVal1 + current_taxVal2 + current_taxVal3 + current_taxVal4 + current_taxVal5;
+            // current_taxVal = Math.round(current_taxVal);
+            // let current_sub = current_sub1 + current_sub2 + current_sub3 + current_sub4 + current_sub5;
+            // let current_val = current_sub + current_taxVal;
             
-        //======
-        // let step_sub1 = quanlity1 * step;
-        //     let step_taxVal1 = step_sub1 * taxRate1 / 100;
-        //     let step_sub2 = quanlity2 * step;
-        //     let step_taxVal2 = step_sub2* taxRate2 / 100;
-        //     let step_sub3 = quanlity3 * step;
-        //     let step_taxVal3 = step_sub3 * taxRate3 / 100;
-        //     let step_sub4 = quanlity4 * step;
-        //     let step_taxVal4 = step_sub4 * taxRate4 / 100;
-        //     let step_sub5 = quanlity5 * step;
-        //     let step_taxVal5 = step_sub5 * taxRate5 / 100;
-        //     let step_taxVal = step_taxVal1 + step_taxVal2 + step_taxVal3 + step_taxVal4 + step_taxVal5;
-        //     step_taxVal = Math.round(step_taxVal);
-        //     let step_sub = step_sub1 + step_sub2 + step_sub3 + step_sub4 + step_sub5;
-        //     let step_val = step_sub + step_taxVal;
-            //================
             $('#loading-result').removeClass('d-none');
-            
+            $('#current-value').addClass('d-none');
             setRangeValueMessage(min_val,max_val,total);
             if(total<=0){
-                displayInvalidMessage(true);
                 totalInvalidMsg();
                 $('#loading-result').addClass('d-none');
                 return;
             }
             if(total<min_val || total>max_val){
-                displayInvalidMessage(true);
                 $('#loading-result').addClass('d-none');
                 
                 return;
             }
             
             setTimeout(() => {
-                // for (let x = price1,xx=0,xxx=true; xx<=range1*2 && !isTimeout; xx += step,xxx=!xxx) {
-                //     if(xxx){
-                //         x = x + xx;
-                //     }else{
-                //         x = x + xx*(-1);
-                //     }
+                for (let x = Math.round(startValue / 1000) * 1000; x <= hh[0].price + hh[0].range && !isTimeout; x += step) {
 
-                // }
-                for (let x = price1 - range1; x <= price1 + range1 && !isTimeout; x += step) {
-
-                    let sub1 = quanlity1 * x;
-                    let taxVal1 = sub1 * taxRate1 / 100;
+                    let sub1 = hh[0].quanlity * x;
+                    let taxVal1 = sub1 * hh[0].taxRate / 100;
                     if (sub1  + taxVal1 > total) {
                         break;
                     }
-                    for (let y = price2 - range2; y <= price2 + range2 && !isTimeout; y += step) {
-                        let sub2 = quanlity2 * y;
-                        let taxVal2 = sub2 * taxRate2 / 100;
+                    for (let y = hh[1].price - hh[1].range; y <= hh[1].price + hh[1].range && !isTimeout; y += step) {
+                        let sub2 = hh[1].quanlity * y;
+                        let taxVal2 = sub2 * hh[1].taxRate / 100;
                         if (sub1 + sub2  + taxVal1 + taxVal2 > total) {
                             break;
                         }
 
-                        for (let z = price3 - range3; z <= price3 + range3 && !isTimeout; z += step) {
-                            let sub3 = quanlity3 * z;
-                            let taxVal3 = sub3 * taxRate3 / 100;
+                        for (let z = hh[2].price - hh[2].range; z <= hh[2].price + hh[2].range && !isTimeout; z += step) {
+                            let sub3 = hh[2].quanlity * z;
+                            let taxVal3 = sub3 * hh[2].taxRate / 100;
 
                             if (sub1 + sub2 + sub3 + taxVal1 + taxVal2 + taxVal3 > total) {
                                 break;
                             }
 
-                            for (let u = price4 - range4; u <= price4 + range4 && !isTimeout; u += step) {
-                                let sub4 = quanlity4 * u;
-                                let taxVal4 = sub4 * taxRate4 / 100;
+                            for (let u = hh[3].price - hh[3].range; u <= hh[3].price + hh[3].range && !isTimeout; u += step) {
+                                let sub4 = hh[3].quanlity * u;
+                                let taxVal4 = sub4 * hh[3].taxRate / 100;
                                 if (sub1 + sub2 + sub3 + sub4 + taxVal1 + taxVal2 + taxVal3 + taxVal4 > total) {
                                     break;
                                 }
 
-                                for (let v = price5 - range5; v <= price5 + range5 && !isTimeout; v += step) {
+                                for (let v = hh[4].price - hh[4].range; v <=hh[4].price - hh[4].range && !isTimeout; v += step) {
                                     
-                                    let sub5 = quanlity5 * v;
-                                    let taxVal5 = sub5 * taxRate5 / 100;
+                                    let sub5 = hh[4].quanlity * v;
+                                    let taxVal5 = sub5 * hh[4].taxRate / 100;
 
                                     let sub = sub1 + sub2 + sub3 + sub4 + sub5;
                                     let taxVal = taxVal1 + taxVal2 + taxVal3 + taxVal4 + taxVal5;
@@ -476,26 +458,31 @@
                                     }
                                     if (Date.now() - startTime >= timeout) {
                                         console.log('time out');
-                                        timeoutMsg(calculatedTotal);
+                                        if(resultRange.length>0){
+                                            timeoutHasValue({x,y,z,u,v});
+                                        }else{
+                                            timeoutMsg({x,y,z,u,v});
+                                        }
+                                       
                                         isTimeout = true;
                                         break;
                                     }
-                                    //if(isTimeout) break;
                                 }
                             }
                             
                         }
-                      //  if (isTimeout) break;
                     }
-                   // if (isTimeout) break;
                 }
+
                 if(resultRange.length<1){
-                    displayInvalidMessage(true);
+                    if(!isTimeout){
+                        findNullMsg();
+                    }
                 }else{
                     for (let i = 0; i < resultRange.length; i++) {
 
                          $('#list-result').append(
-                            `<li class="list-group-item">
+                            `<li class="list-group-item list-group-item-action">
                                 HH1: <strong>${formatNumber(resultRange[i].x)}</strong> 
                                 -HH2: <strong>${formatNumber(resultRange[i].y)}</strong> 
                                 -HH3: <strong>${formatNumber(resultRange[i].z)}</strong> 
@@ -519,6 +506,8 @@
         
        $(document).on('click','#list-result li',function(){
             try {
+                $('#list-result li').removeClass('active');
+                $(this).addClass('active');
                 let selectedItemText = $(this).text();
                 let items = selectedItemText.split('-');
                 let hh1 = items[0].split(':')[1].trim();
@@ -538,36 +527,73 @@
        });
     
 });
-function displayInvalidMessage(isdisplay){
+</script>
+<script>
     
-    if(isdisplay){
+    function displayInvalidMessage(isdisplay){
+        
+        if(isdisplay){
 
+            $('#invalid-value').removeClass('d-none');
+        }else{
+            $('#invalid-value').addClass('d-none');
+        }
+    }
+    function setRangeValueMessage(min,max,value){
+       
+        if(value<min){
+            $('#invalid-value').removeClass('d-none');
+            $('#invalid-value').html(` <strong style="color: red;">Quá trình tìm kiếm bị lỗi.</strong> 
+                <br> Vui lòng giảm số lượng hoặc đơn giá. <br> Cần giảm khoảng ${formatNumber(min-value)}`);
+            $('#total-range').html(`Giá trị tìm được khoảng: <i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong> <br> Lớn hơn giá trị mong muốn.`);
+        }
+        else if(value > max){
+            $('#invalid-value').removeClass('d-none');
+            $('#invalid-value').html(` <strong style="color: red;">Quá trình tìm kiếm bị lỗi.</strong> 
+            <br> Vui lòng tăng số lượng hoặc đơn giá. <br>Cần tăng khoảng ${formatNumber(value-max)}`);
+           
+            $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong>...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>  <br> Nhỏ hơn giá trị mong muốn.`);
+
+        }
+        else{
+            $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... ${formatNumber(max)}</strong> `);
+        }
+    }
+    function timeoutMsg(value){
         $('#invalid-value').removeClass('d-none');
-    }else{
-        $('#invalid-value').addClass('d-none');
+        $('#current-value').removeClass('d-none');
+        $('#invalid-value').html(` <strong style="color: red;">Thời gian tìm kiếm quá lâu.</strong>`);
+        $('#current-value').html(`Quá trình tìm kiếm đã dừng tại: <br>
+                        HH1: <strong>${formatNumber(value.x)}</strong> 
+                        -HH2: <strong>${formatNumber(value.y)}</strong> 
+                        -HH3: <strong>${formatNumber(value.z)}</strong> 
+                        -HH4: <strong>${formatNumber(value.u)}</strong> 
+                        -HH5: <strong>${formatNumber(value.v)}</strong>`);
     }
-}
-function setRangeValueMessage(min,max,value){
-    if(value<min){
-        $('#invalid-message').html(`Vui lòng giảm số lượng hoặc đơn giá. <br> Cần giảm khoảng ${formatNumber(min-value)}`);
-        $('#total-range').html(`Giá trị tìm được khoảng: <i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong> <br> Lớn hơn giá trị mong muốn.`);
+    function timeoutHasValue(value){
+        $('#invalid-value').removeClass('d-none');
+        $('#current-value').removeClass('d-none');
+        $('#invalid-value').html(` <strong style="color: red;"></strong>`);
+        $('#current-value').html(`Quá trình tìm kiếm đã dừng tại: <br>
+                HH1: <strong>${formatNumber(value.x)}</strong> 
+                -HH2: <strong>${formatNumber(value.y)}</strong> 
+                -HH3: <strong>${formatNumber(value.z)}</strong> 
+                -HH4: <strong>${formatNumber(value.u)}</strong> 
+                -HH5: <strong>${formatNumber(value.v)}</strong>`);
+       
     }
-    else if(value > max){
-        $('#invalid-message').html(`Vui lòng tăng số lượng hoặc đơn giá. <br>Cần tăng khoảng ${formatNumber(value-max)}`);
-        $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ... ${formatNumber(max)}</strong>...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>  <br> Nhỏ hơn giá trị mong muốn.`);
+    function findNullMsg(){
+        $('#invalid-value').removeClass('d-none');
+        $('#invalid-value').html(`<strong style="color: red;">Không tìm được kết quả hợp lệ.</strong>
+        <br> 1. Thử giảm tốc độ để tìm kiếm sâu hơn.
+        <br> 2. Thay đổi giá trị phù hợp. `);
+       
+    }
+    function totalInvalidMsg(){
+        $('#invalid-value').removeClass('d-none');
+        $('#invalid-value').html(`<strong style="color: red;">Chưa cài đặt giá trị hóa đơn mong muốn.</strong> `);
+    }
 
-    }
-    else{
-        $('#invalid-message').html('Vui lòng giảm tốc độ hoặc thay đổi giá trị khác cho phù hợp.');
-        $('#total-range').html(`Giá trị tìm được khoảng: <strong> ${formatNumber(min)} ...<i style='color:red;' class="bi bi-file-arrow-down-fill"></i>... ${formatNumber(max)}</strong> `);
-    }
-}
-function timeoutMsg(calculatedTotalCurrent){
-    $('#invalid-message').html(`Thời gian tính quá lâu. Kết quả chỉ được tính tới:${formatNumber(calculatedTotalCurrent)} <br> Thử tăng tốc độ lên`);
-}
-function totalInvalidMsg(){
-    $('#invalid-message').html(`Chưa cài đặt giá trị hóa đơn mong muốn.`);
-}
 </script>
 </body>
 </html>
