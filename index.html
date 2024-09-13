@@ -196,14 +196,18 @@
         <div class="col-md-5  col-12">
             <div class="card-body" >
                 <div class="row  text-center">
-                    <div class="col-sm-8 d-flex justify-content-start">
+                    <div class="col-sm-4 d-flex justify-content-start">
                         <button id="btnResult" type="button" class="btn btn-primary" style="margin: 0px 15px; width: 200px;">
                             <span id="loading-result" class="spinner-border spinner-border-sm d-none"></span>
                             Tìm kết quả
                         </button>
                         
                     </div>
-                    
+                    <div class="col-sm-4">
+                        <input id="quick-search" class="form-check-input" type="checkbox" value="">
+                        <label class="form-check-label" for="quick-search"> Tìm nhanh </label>
+                    </div>
+                   
                     <label class="col-sm-2 col-form-label text-end" >Tốc độ:</label>
                     <div class="col-sm-2">
                         <input id="input-speed"  class="form-control" type="text" >
@@ -372,7 +376,7 @@
            
             let startValue = (total - max_sub_1_4 - max_taxVal_1_4)*100/(100+hh[0].taxRate)/hh[0].quanlity;
             startValue = Math.floor(startValue);
-            console.log("startValue",startValue);
+            
             min_taxVal = Math.round(min_taxVal);
             let min_val = min_sub + min_taxVal;
 
@@ -411,16 +415,24 @@
             }
             
             setTimeout(() => {
-                for (let x = Math.round(startValue / 1000) * 1000; x <= hh[0].price + hh[0].range && !isTimeout; x += step) {
+                
+                let isQuickSearch = $('#quick-search').is(':checked');
+                
+                startValue = isQuickSearch===true? Math.round(startValue): hh[0].price - hh[0].range;
+                console.log('isQuickSearch',isQuickSearch);
+                console.log("startValue",startValue);
+                for (let x = startValue; x <= hh[0].price + hh[0].range && !isTimeout; x += step) {
 
                     let sub1 = hh[0].quanlity * x;
                     let taxVal1 = sub1 * hh[0].taxRate / 100;
+                    taxVal1 =  Math.round(taxVal1);
                     if (sub1  + taxVal1 > total) {
                         break;
                     }
                     for (let y = hh[1].price - hh[1].range; y <= hh[1].price + hh[1].range && !isTimeout; y += step) {
                         let sub2 = hh[1].quanlity * y;
                         let taxVal2 = sub2 * hh[1].taxRate / 100;
+                        taxVal2 =  Math.round(taxVal2);
                         if (sub1 + sub2  + taxVal1 + taxVal2 > total) {
                             break;
                         }
@@ -428,7 +440,7 @@
                         for (let z = hh[2].price - hh[2].range; z <= hh[2].price + hh[2].range && !isTimeout; z += step) {
                             let sub3 = hh[2].quanlity * z;
                             let taxVal3 = sub3 * hh[2].taxRate / 100;
-
+                            taxVal3 =  Math.round(taxVal3);
                             if (sub1 + sub2 + sub3 + taxVal1 + taxVal2 + taxVal3 > total) {
                                 break;
                             }
@@ -436,6 +448,7 @@
                             for (let u = hh[3].price - hh[3].range; u <= hh[3].price + hh[3].range && !isTimeout; u += step) {
                                 let sub4 = hh[3].quanlity * u;
                                 let taxVal4 = sub4 * hh[3].taxRate / 100;
+                                taxVal4 =  Math.round(taxVal4);
                                 if (sub1 + sub2 + sub3 + sub4 + taxVal1 + taxVal2 + taxVal3 + taxVal4 > total) {
                                     break;
                                 }
@@ -444,7 +457,7 @@
                                     
                                     let sub5 = hh[4].quanlity * v;
                                     let taxVal5 = sub5 * hh[4].taxRate / 100;
-
+                                    taxVal5 =  Math.round(taxVal5);
                                     let sub = sub1 + sub2 + sub3 + sub4 + sub5;
                                     let taxVal = taxVal1 + taxVal2 + taxVal3 + taxVal4 + taxVal5;
                                     taxVal = Math.round(taxVal);
