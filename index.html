@@ -377,10 +377,10 @@
             let startValue = (total - max_sub_1_4 - max_taxVal_1_4)*100/(100+hh[0].taxRate)/hh[0].quanlity;
             startValue = Math.floor(startValue);
             
-            min_taxVal = Math.round(min_taxVal);
+            min_taxVal = roundNumber(min_taxVal);
             let min_val = min_sub + min_taxVal;
 
-            max_taxVal = Math.round(max_taxVal);
+            max_taxVal =roundNumber(max_taxVal);
             let max_val = max_sub + max_taxVal;
             //=================
             displayInvalidMessage(false);
@@ -425,14 +425,14 @@
 
                     let sub1 = hh[0].quanlity * x;
                     let taxVal1 = sub1 * hh[0].taxRate / 100;
-                    taxVal1 =  Math.round(taxVal1);
+                    taxVal1 = roundNumber(taxVal1);
                     if (sub1  + taxVal1 > total) {
                         break;
                     }
                     for (let y = hh[1].price - hh[1].range; y <= hh[1].price + hh[1].range && !isTimeout; y += step) {
                         let sub2 = hh[1].quanlity * y;
                         let taxVal2 = sub2 * hh[1].taxRate / 100;
-                        taxVal2 =  Math.round(taxVal2);
+                        taxVal2 = roundNumber(taxVal2); 
                         if (sub1 + sub2  + taxVal1 + taxVal2 > total) {
                             break;
                         }
@@ -440,7 +440,7 @@
                         for (let z = hh[2].price - hh[2].range; z <= hh[2].price + hh[2].range && !isTimeout; z += step) {
                             let sub3 = hh[2].quanlity * z;
                             let taxVal3 = sub3 * hh[2].taxRate / 100;
-                            taxVal3 =  Math.round(taxVal3);
+                            taxVal3 = roundNumber(taxVal3);
                             if (sub1 + sub2 + sub3 + taxVal1 + taxVal2 + taxVal3 > total) {
                                 break;
                             }
@@ -448,7 +448,7 @@
                             for (let u = hh[3].price - hh[3].range; u <= hh[3].price + hh[3].range && !isTimeout; u += step) {
                                 let sub4 = hh[3].quanlity * u;
                                 let taxVal4 = sub4 * hh[3].taxRate / 100;
-                                taxVal4 =  Math.round(taxVal4);
+                                taxVal4 =  roundNumber(taxVal4);
                                 if (sub1 + sub2 + sub3 + sub4 + taxVal1 + taxVal2 + taxVal3 + taxVal4 > total) {
                                     break;
                                 }
@@ -457,10 +457,10 @@
                                     
                                     let sub5 = hh[4].quanlity * v;
                                     let taxVal5 = sub5 * hh[4].taxRate / 100;
-                                    taxVal5 =  Math.round(taxVal5);
+                                    taxVal5 = roundNumber(taxVal5);
                                     let sub = sub1 + sub2 + sub3 + sub4 + sub5;
                                     let taxVal = taxVal1 + taxVal2 + taxVal3 + taxVal4 + taxVal5;
-                                    taxVal = Math.round(taxVal);
+                                    taxVal = roundNumber(taxVal);
                                     let calculatedTotal = sub + taxVal;
                                     if(calculatedTotal>total){
                                         break;
@@ -606,7 +606,9 @@
         $('#invalid-value').removeClass('d-none');
         $('#invalid-value').html(`<strong style="color: red;">Chưa cài đặt giá trị hóa đơn mong muốn.</strong> `);
     }
-
+    function roundNumber(num) {
+        return num >= Math.ceil(num) - 0.5 ? Math.ceil(num) : num;
+    }
 </script>
 </body>
 </html>
