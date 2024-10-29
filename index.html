@@ -292,7 +292,7 @@
         $('#price5').val(0);
         $('#range5').val(0);
         $('#total').val(formatNumber(0));
-        $('#input-timeout').val(formatNumber(3000));
+        $('#input-timeout').val(formatNumber(10000));
         $('#input-speed').val(30);
     $('#btnResult').click(function(){
         let hh =[];
@@ -410,8 +410,7 @@
                 let isQuickSearch = $('#quick-search').is(':checked');
                 
                 startValue = isQuickSearch===true? Math.round(startValue): hh[0].price - hh[0].range;
-                console.log('isQuickSearch',isQuickSearch);
-                console.log("startValue",startValue);
+                
                 for (let x = startValue; x <= hh[0].price + hh[0].range && !isTimeout; x += step) {
 
                     let sub1 = hh[0].quanlity * x;
