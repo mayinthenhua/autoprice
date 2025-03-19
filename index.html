@@ -405,85 +405,108 @@
                 return;
             }
             
+            // setTimeout(() => {
+            //     let isQuickSearch = $('#quick-search').is(':checked');
+            //     startValue = isQuickSearch ? Math.round(startValue) : hh[0].price - hh[0].range;
+                
+            //     const priceRange = hh.map(item => ({ 
+            //         min: item.price - item.range, 
+            //         max: item.price + item.range, 
+            //         step: step, 
+            //         quantity: item.quanlity, 
+            //         taxRate: item.taxRate 
+            //     }));
+
+            //     for (let x = priceRange[0].min; x <= priceRange[0].max && !isTimeout; x += priceRange[0].step) {
+            //         let sub1 = priceRange[0].quantity * x;
+            //         let taxVal1 = roundNumber(sub1 * priceRange[0].taxRate / 100);
+            //         if (sub1 + taxVal1 > total) break;
+
+            //         for (let y = priceRange[1].min; y <= priceRange[1].max && !isTimeout; y += priceRange[1].step) {
+            //             let sub2 = priceRange[1].quantity * y;
+            //             let taxVal2 = roundNumber(sub2 * priceRange[1].taxRate / 100);
+            //             if (sub1 + sub2 + taxVal1 + taxVal2 > total) break;
+
+            //             for (let z = priceRange[2].min; z <= priceRange[2].max && !isTimeout; z += priceRange[2].step) {
+            //                 let sub3 = priceRange[2].quantity * z;
+            //                 let taxVal3 = roundNumber(sub3 * priceRange[2].taxRate / 100);
+            //                 if (sub1 + sub2 + sub3 + taxVal1 + taxVal2 + taxVal3 > total) break;
+
+            //                 for (let u = priceRange[3].min; u <= priceRange[3].max && !isTimeout; u += priceRange[3].step) {
+            //                     let sub4 = priceRange[3].quantity * u;
+            //                     let taxVal4 = roundNumber(sub4 * priceRange[3].taxRate / 100);
+            //                     if (sub1 + sub2 + sub3 + sub4 + taxVal1 + taxVal2 + taxVal3 + taxVal4 > total) break;
+
+            //                     for (let v = priceRange[4].min; v <= priceRange[4].max && !isTimeout; v += priceRange[4].step) {
+            //                         let sub5 = priceRange[4].quantity * v;
+            //                         let taxVal5 = roundNumber(sub5 * priceRange[4].taxRate / 100);
+
+            //                         let totalSub = sub1 + sub2 + sub3 + sub4 + sub5;
+            //                         let totalTax = taxVal1 + taxVal2 + taxVal3 + taxVal4 + taxVal5;
+            //                         let calculatedTotal = totalSub + totalTax;
+
+            //                         if (calculatedTotal > total) break;
+
+            //                         if (calculatedTotal === total) {
+            //                             resultRange.push({ x, y, z, u, v });
+            //                         }
+
+            //                         if (Date.now() - startTime >= timeout) {
+            //                             console.log('time out');
+            //                             isTimeout = true;
+            //                             if (resultRange.length > 0) {
+            //                                 timeoutHasValue({ x, y, z, u, v });
+            //                             } else {
+            //                                 timeoutMsg({ x, y, z, u, v });
+            //                             }
+            //                             break;
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+
+            //     if (resultRange.length < 1 && !isTimeout) {
+            //         findNullMsg();
+            //     } else {
+            //         $('#list-result').html(resultRange.map(r => `
+            //             <li class="list-group-item list-group-item-action">
+            //                 HH1: <strong>${formatNumber(r.x)}</strong> 
+            //                 - HH2: <strong>${formatNumber(r.y)}</strong> 
+            //                 - HH3: <strong>${formatNumber(r.z)}</strong> 
+            //                 - HH4: <strong>${formatNumber(r.u)}</strong> 
+            //                 - HH5: <strong>${formatNumber(r.v)}</strong>
+            //             </li>`).join(""));
+            //     }
+
+            //     $('#loading-result').addClass('d-none');  
+            // }, 100);
+
             setTimeout(() => {
                 let isQuickSearch = $('#quick-search').is(':checked');
                 startValue = isQuickSearch ? Math.round(startValue) : hh[0].price - hh[0].range;
                 
-                const priceRange = hh.map(item => ({ 
-                    min: item.price - item.range, 
-                    max: item.price + item.range, 
-                    step: step, 
-                    quantity: item.quanlity, 
-                    taxRate: item.taxRate 
-                }));
-
-                for (let x = priceRange[0].min; x <= priceRange[0].max && !isTimeout; x += priceRange[0].step) {
-                    let sub1 = priceRange[0].quantity * x;
-                    let taxVal1 = roundNumber(sub1 * priceRange[0].taxRate / 100);
-                    if (sub1 + taxVal1 > total) break;
-
-                    for (let y = priceRange[1].min; y <= priceRange[1].max && !isTimeout; y += priceRange[1].step) {
-                        let sub2 = priceRange[1].quantity * y;
-                        let taxVal2 = roundNumber(sub2 * priceRange[1].taxRate / 100);
-                        if (sub1 + sub2 + taxVal1 + taxVal2 > total) break;
-
-                        for (let z = priceRange[2].min; z <= priceRange[2].max && !isTimeout; z += priceRange[2].step) {
-                            let sub3 = priceRange[2].quantity * z;
-                            let taxVal3 = roundNumber(sub3 * priceRange[2].taxRate / 100);
-                            if (sub1 + sub2 + sub3 + taxVal1 + taxVal2 + taxVal3 > total) break;
-
-                            for (let u = priceRange[3].min; u <= priceRange[3].max && !isTimeout; u += priceRange[3].step) {
-                                let sub4 = priceRange[3].quantity * u;
-                                let taxVal4 = roundNumber(sub4 * priceRange[3].taxRate / 100);
-                                if (sub1 + sub2 + sub3 + sub4 + taxVal1 + taxVal2 + taxVal3 + taxVal4 > total) break;
-
-                                for (let v = priceRange[4].min; v <= priceRange[4].max && !isTimeout; v += priceRange[4].step) {
-                                    let sub5 = priceRange[4].quantity * v;
-                                    let taxVal5 = roundNumber(sub5 * priceRange[4].taxRate / 100);
-
-                                    let totalSub = sub1 + sub2 + sub3 + sub4 + sub5;
-                                    let totalTax = taxVal1 + taxVal2 + taxVal3 + taxVal4 + taxVal5;
-                                    let calculatedTotal = totalSub + totalTax;
-
-                                    if (calculatedTotal > total) break;
-
-                                    if (calculatedTotal === total) {
-                                        resultRange.push({ x, y, z, u, v });
-                                    }
-
-                                    if (Date.now() - startTime >= timeout) {
-                                        console.log('time out');
-                                        isTimeout = true;
-                                        if (resultRange.length > 0) {
-                                            timeoutHasValue({ x, y, z, u, v });
-                                        } else {
-                                            timeoutMsg({ x, y, z, u, v });
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
+                findCombinations(0, {}, 0, 0);
+                
                 if (resultRange.length < 1 && !isTimeout) {
                     findNullMsg();
                 } else {
-                    $('#list-result').html(resultRange.map(r => `
-                        <li class="list-group-item list-group-item-action">
-                            HH1: <strong>${formatNumber(r.x)}</strong> 
-                            - HH2: <strong>${formatNumber(r.y)}</strong> 
-                            - HH3: <strong>${formatNumber(r.z)}</strong> 
-                            - HH4: <strong>${formatNumber(r.u)}</strong> 
-                            - HH5: <strong>${formatNumber(r.v)}</strong>
-                        </li>`).join(""));
+                    resultRange.forEach(result => {
+                        $('#list-result').append(
+                            `<li class="list-group-item list-group-item-action">
+                                HH1: <strong>${formatNumber(result[0])}</strong>
+                                -HH2: <strong>${formatNumber(result[1])}</strong>
+                                -HH3: <strong>${formatNumber(result[2])}</strong>
+                                -HH4: <strong>${formatNumber(result[3])}</strong>
+                                -HH5: <strong>${formatNumber(result[4])}</strong>
+                            </li>`
+                        );
+                    });
                 }
-
+                
                 $('#loading-result').addClass('d-none');  
             }, 100);
-
-           
           
         } catch (error) {
             console.log(error);
@@ -515,6 +538,39 @@
        });
     
 });
+function findCombinations(index, currentValues, currentSubTotal, currentTaxTotal) {
+    if (index === hh.length) {
+        let calculatedTotal = currentSubTotal + currentTaxTotal;
+        if (calculatedTotal === total) {
+            resultRange.push({ ...currentValues });
+        }
+        return;
+    }
+    
+    let item = hh[index];
+    for (let value = item.price - item.range; value <= item.price + item.range && !isTimeout; value += step) {
+        let sub = item.quanlity * value;
+        let tax = roundNumber(sub * item.taxRate / 100);
+        
+        if (currentSubTotal + sub + currentTaxTotal + tax > total) {
+            break;
+        }
+        
+        currentValues[index] = value;
+        findCombinations(index + 1, currentValues, currentSubTotal + sub, currentTaxTotal + tax);
+        
+        if (Date.now() - startTime >= timeout) {
+            console.log('time out');
+            if (resultRange.length > 0) {
+                timeoutHasValue(currentValues);
+            } else {
+                timeoutMsg(currentValues);
+            }
+            isTimeout = true;
+            return;
+        }
+    }
+}
 </script>
 <script>
     
