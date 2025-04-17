@@ -504,6 +504,7 @@
         
        $(document).on('click','#list-result li',function(){
             try {
+           
                 $('#list-result li').removeClass('active');
                 $(this).addClass('active');
                 let selectedItemText = $(this).text();
@@ -512,14 +513,12 @@
                 let hh2 = items[1].split(':')[1].trim();
                 let hh3 = items[2].split(':')[1].trim();
                 let hh4 = items[3].split(':')[1].trim();
-                let hh5 = items[4].split(':')[1].trim();
                 $('#result1').val(hh1);
                 $('#result2').val(hh2);
                 $('#result3').val(hh3);
                 $('#result4').val(hh4);
-                $('#result5').val(hh5);
             } catch (error) {
-                
+                console.log(error);
             }
             
        });
@@ -603,8 +602,7 @@
                         HH1: <strong>${formatNumber(value.x)}</strong> 
                         -HH2: <strong>${formatNumber(value.y)}</strong> 
                         -HH3: <strong>${formatNumber(value.z)}</strong> 
-                        -HH4: <strong>${formatNumber(value.u)}</strong> 
-                        -HH5: <strong>${formatNumber(value.v)}</strong>`);
+                        -HH4: <strong>${formatNumber(value.u)}</strong>`);
     }
     function timeoutHasValue(value){
         $('#invalid-value').removeClass('d-none');
@@ -614,8 +612,7 @@
                 HH1: <strong>${formatNumber(value.x)}</strong> 
                 -HH2: <strong>${formatNumber(value.y)}</strong> 
                 -HH3: <strong>${formatNumber(value.z)}</strong> 
-                -HH4: <strong>${formatNumber(value.u)}</strong> 
-                -HH5: <strong>${formatNumber(value.v)}</strong>`);
+                -HH4: <strong>${formatNumber(value.u)}</strong>`);
        
     }
     function findNullMsg(){
